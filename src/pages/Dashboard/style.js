@@ -11,8 +11,8 @@ export const ContainerDashboard = styled.div`
 
   header {
     padding: 10px 10px 0 10px;
-    @media (min-width: 600px) {
-      max-width: 600px;
+    @media (min-width: 780px) {
+      max-width: 780px;
       padding: 10px 0 0 0;
     }
   }
@@ -31,6 +31,12 @@ export const Section = styled.section`
     font-size: 18px;
     font-weight: 700;
     color: var(--gray-5);
+  }
+
+  @media (min-width: 600px) {
+    max-width: 780px;
+    flex-direction: row;
+    justify-content: space-between;
   }
 `;
 
@@ -55,9 +61,9 @@ export const Div = styled.div`
     padding: 5px 8px;
   }
 
-  @media (min-width: 600px) {
-    max-width: 600px;
-    padding: 10px 0;
+  @media (min-width: 780px) {
+    max-width: 780px;
+    padding: 10px 0 0 0;
   }
 `;
 
@@ -139,6 +145,11 @@ export const DivParentUl = styled.div`
   align-items: center;
   justify-content: center;
   padding: 0 10px;
+
+  @media (min-width: 780px) {
+    max-width: 780px;
+    padding: 10px 0 0 0;
+  }
 `;
 
 export const Ul = styled.ul`
@@ -149,10 +160,6 @@ export const Ul = styled.ul`
   gap: 10px;
   width: 100%;
   background-color: var(--gray-2);
-
-  @media (min-width: 600px) {
-    max-width: 600px;
-  }
 `;
 
 export const Li = styled.li`

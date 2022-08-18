@@ -93,7 +93,9 @@ export function DashboardProvider({ children }) {
   function logout() {
     localStorage.removeItem("KHtokenKH");
     localStorage.removeItem("KHidKH");
-    navigate("/login", { replace: true });
+    setTimeout(() => {
+      navigate("/login", { replace: true });
+    }, 800);
   }
 
   function addTechSubmit(data) {

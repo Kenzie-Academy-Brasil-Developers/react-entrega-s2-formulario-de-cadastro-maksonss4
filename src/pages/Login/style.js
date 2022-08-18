@@ -22,8 +22,8 @@ export const Div = styled.div`
   padding: 10px;
   position: relative;
 
-  @media (min-width: 600px) {
-    max-width: 600px;
+  @media (min-width: 380px) {
+    max-width: 380px;
   }
 `;
 

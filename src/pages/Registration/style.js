@@ -9,8 +9,8 @@ export const ContainerRegister = styled.div`
   align-items: center;
 
   header {
-    @media (min-width: 600px) {
-      max-width: 600px;
+    @media (min-width: 380px) {
+      max-width: 380px;
     }
   }
 `;
@@ -27,8 +27,8 @@ export const Div = styled.div`
   position: relative;
   border-radius: 5px;
 
-  @media (min-width: 600px) {
-    max-width: 600px;
+  @media (min-width: 380px) {
+    max-width: 380px;
   }
 `;
 

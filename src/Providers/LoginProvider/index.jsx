@@ -11,6 +11,7 @@ export function LoginProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [tecs, setTecs] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function loadUser() {
@@ -22,6 +23,7 @@ export function LoginProvider({ children }) {
           const { data } = await api.get("/profile");
           setTecs(data.techs);
           setUser(data);
+          navigate("/dashboard", { replace: true });
         } catch (err) {
           console.log(err);
         }
@@ -30,8 +32,6 @@ export function LoginProvider({ children }) {
     }
     loadUser();
   }, [user]);
-
-  const navigate = useNavigate();
 
   const schema = yup
     .object({
