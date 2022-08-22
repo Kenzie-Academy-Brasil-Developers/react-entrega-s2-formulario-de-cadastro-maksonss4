@@ -15,12 +15,24 @@ interface ILoginContext {
   setTecs: React.Dispatch<React.SetStateAction<ITec[]>>;
   user: IUser;
   signIn: (value: ISignInData) => void;
+  idUser: string;
+  atualizarTechs: () => void;
 }
 
 interface ITec {
   id: string;
   title: string;
   status: string;
+}
+
+interface IAtualizarTechs {
+  id: string;
+  name: string;
+  email: string;
+  course_module: string;
+  bio: string;
+  contact: string;
+  techs: IUserTech[];
 }
 
 interface IUserTech {
@@ -60,6 +72,7 @@ export function LoginProvider({ children }: IProvidersProps) {
   const [user, setUser] = useState({} as IUser);
   const [loading, setLoading] = useState(true);
   const [tecs, setTecs] = useState([] as ITec[]);
+  const [idUser, setIdUser] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -71,6 +84,7 @@ export function LoginProvider({ children }: IProvidersProps) {
           api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
           const { data } = await api.get("/profile");
           setTecs(data.techs);
+          setIdUser(data.id);
           setUser(data);
           navigate("/dashboard", { replace: true });
         } catch (err) {
@@ -81,6 +95,15 @@ export function LoginProvider({ children }: IProvidersProps) {
     }
     loadUser();
   }, []);
+
+  function atualizarTechs() {
+    api
+      .get<IAtualizarTechs>(`/users/${idUser}`)
+      .then((res) => {
+        setTecs(res.data.techs);
+      })
+      .catch((err) => console.log(err));
+  }
 
   function seeDoNotSeePassword() {
     setSeePassword(!seePassword);
@@ -118,8 +141,8 @@ export function LoginProvider({ children }: IProvidersProps) {
         api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
         setTecs(userLogado.techs);
         setUser(userLogado);
+        setIdUser(userLogado.id);
         localStorage.setItem("KHtokenKH", token);
-        localStorage.setItem("KHidKH", userLogado.id);
         sucess();
         navigate(`/dashboard`, { replace: true });
       })
@@ -133,10 +156,11 @@ export function LoginProvider({ children }: IProvidersProps) {
         user,
         seeDoNotSeePassword,
         signIn,
-
+        idUser,
         loading,
         tecs,
         setTecs,
+        atualizarTechs,
       }}
     >
       {children}

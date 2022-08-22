@@ -1,8 +1,9 @@
-import { createContext, useState } from "react";
+import { createContext, useContext, useState } from "react";
 import { api } from "../../services/api";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { IProvidersProps } from "..";
+import { LoginContext } from "../LoginProvider";
 
 export const DashboarContext = createContext({} as IDashboardContext);
 
@@ -38,6 +39,7 @@ export function DashboardProvider({ children }: IProvidersProps) {
   const [isOpenModalEditTech, setIsOpenModalEditTech] = useState(false);
   const [idTech, setIdTech] = useState("");
   const [titleTech, setTitleTech] = useState("");
+  const { atualizarTechs } = useContext(LoginContext);
   const navigate = useNavigate();
 
   function tecAnteriormenteCadastrada() {
@@ -120,6 +122,7 @@ export function DashboardProvider({ children }: IProvidersProps) {
       .then(() => {
         tecDeletadaComSucesso();
         openCloseModalDeleteTech();
+        atualizarTechs();
       })
       .catch((err) => console.log(err));
   }
@@ -130,16 +133,17 @@ export function DashboardProvider({ children }: IProvidersProps) {
       .then(() => {
         tecCadastradaComSucesso();
         openCloseModalAddTech();
+        atualizarTechs();
       })
       .catch(() => tecAnteriormenteCadastrada());
   }
 
   function atualizarStatusTech(data: IAtualizarTech) {
-    console.log(data);
     api
       .put(`/users/techs/${idTech}`, data)
       .then(() => {
         techEditadaComSucesso();
+        atualizarTechs();
         setIsOpenModalEditTech(!isOpenModalEditTech);
       })
       .catch((err) => console.log(err));
