@@ -71,8 +71,8 @@ export function LoginProvider({ children }: IProvidersProps) {
   const [seePassword, setSeePassword] = useState(false);
   const [user, setUser] = useState({} as IUser);
   const [loading, setLoading] = useState(true);
-  const [tecs, setTecs] = useState([] as ITec[]);
   const [idUser, setIdUser] = useState("");
+  const [tecs, setTecs] = useState([] as ITec[]);
   const navigate = useNavigate();
 
   useEffect(() => {

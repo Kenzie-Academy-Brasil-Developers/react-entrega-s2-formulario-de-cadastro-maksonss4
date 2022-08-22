@@ -116,17 +116,6 @@ export function DashboardProvider({ children }: IProvidersProps) {
     navigate("/login", { replace: true });
   }
 
-  function deleteTech() {
-    api
-      .delete(`/users/techs/${idTech}`)
-      .then(() => {
-        tecDeletadaComSucesso();
-        openCloseModalDeleteTech();
-        atualizarTechs();
-      })
-      .catch((err) => console.log(err));
-  }
-
   function addTechSubmit(data: IAddTech) {
     api
       .post("/users/techs", data)
@@ -136,6 +125,17 @@ export function DashboardProvider({ children }: IProvidersProps) {
         atualizarTechs();
       })
       .catch(() => tecAnteriormenteCadastrada());
+  }
+
+  function deleteTech() {
+    api
+      .delete(`/users/techs/${idTech}`)
+      .then(() => {
+        tecDeletadaComSucesso();
+        openCloseModalDeleteTech();
+        atualizarTechs();
+      })
+      .catch((err) => console.log(err));
   }
 
   function atualizarStatusTech(data: IAtualizarTech) {
