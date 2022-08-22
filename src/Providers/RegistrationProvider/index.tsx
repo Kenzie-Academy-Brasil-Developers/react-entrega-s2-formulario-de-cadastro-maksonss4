@@ -1,12 +1,31 @@
 import { createContext, useState } from "react";
 import { toast } from "react-toastify";
-import * as yup from "yup";
+
 import { api } from "../../services/api";
 import { useNavigate } from "react-router-dom";
+import { IProvidersProps } from "..";
 
-export const RegistrationContext = createContext();
+export const RegistrationContext = createContext({} as IRegistrationContext);
 
-export function RegistrationProvider({ children }) {
+interface IRegistrationContext {
+  seeConfirmPassword: boolean;
+  seePassword: boolean;
+  seeDoNotSeePassword: () => void;
+  seeDoNotSeeConfirmPassword: () => void;
+  onSubmit: (value: IDataRegistration) => void;
+}
+
+export interface IDataRegistration {
+  name: string;
+  email: string;
+  password: string;
+  confirm_password: string;
+  bio: string;
+  contact: string;
+  course_module: string;
+}
+
+export function RegistrationProvider({ children }: IProvidersProps) {
   const [seePassword, setSeePassword] = useState(false);
   const [seeConfirmPassword, setSeeConfirmPassword] = useState(false);
 
@@ -19,33 +38,6 @@ export function RegistrationProvider({ children }) {
   function seeDoNotSeeConfirmPassword() {
     setSeeConfirmPassword(!seeConfirmPassword);
   }
-
-  const schema = yup.object({
-    name: yup.string().required("Nome é obrigatório"),
-    email: yup
-      .string()
-      .email("Insira um email válido")
-      .required("Email é obrigatório"),
-    password: yup
-      .string()
-      .min(8, "Mínimo 8 caracteres")
-      .matches(/[A-Z]/, "deve conter ao menos 1 letra maiúscula")
-      .matches(/([a-z])/, "deve conter ao menos 1 letra minúscula")
-      .matches(/(\d)/, "deve conter ao menos 1 número")
-      .matches(/(\W)|_/, "deve conter ao menos 1 caracter especial"),
-    confirm_password: yup
-      .string()
-      .required("Confirme a senha")
-      .oneOf([yup.ref("password")], "Precisa ser igual a senha"),
-    bio: yup
-      .string()
-      .required("Este campo é obrigatório")
-      .min(8, "Mínimo 8 caracteres"),
-    contact: yup
-      .string()
-      .required("Este campo é obrigatório")
-      .min(5, "Mínimo 5 caracteres"),
-  });
 
   function success() {
     toast.success("Usuário criado com sucesso", {
@@ -71,7 +63,7 @@ export function RegistrationProvider({ children }) {
     });
   }
 
-  function onSubmit(data) {
+  function onSubmit(data: IDataRegistration) {
     api
       .post("/users", data)
       .then(() => {
@@ -84,14 +76,11 @@ export function RegistrationProvider({ children }) {
   return (
     <RegistrationContext.Provider
       value={{
-        schema,
         onSubmit,
         seePassword,
         seeDoNotSeePassword,
         seeConfirmPassword,
         seeDoNotSeeConfirmPassword,
-        success,
-        errorEmail,
       }}
     >
       {children}

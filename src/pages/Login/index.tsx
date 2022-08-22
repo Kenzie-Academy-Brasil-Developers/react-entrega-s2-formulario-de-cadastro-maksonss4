@@ -3,7 +3,8 @@ import { useForm } from "react-hook-form";
 import { H2 } from "../../components/H2";
 import { Logo } from "../../components/Logo";
 import { Span } from "../../components/Span";
-import { LoginContext } from "../../Providers/LoginProvider";
+import * as yup from "yup";
+import { ISignInData, LoginContext } from "../../Providers/LoginProvider";
 import { yupResolver } from "@hookform/resolvers/yup";
 import {
   LinkToRegistration,
@@ -17,13 +18,22 @@ import {
 } from "./style";
 
 export function Login() {
-  const { seePassword, seeDoNotSeePassword, signIn, schema } =
-    useContext(LoginContext);
+  const { seePassword, seeDoNotSeePassword, signIn } = useContext(LoginContext);
+  const schema = yup
+    .object({
+      email: yup
+        .string()
+        .required("Email obrigatório")
+        .email("Insira um email válido"),
+      password: yup.string().required("Insira sua senha"),
+    })
+    .required();
+
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({
+  } = useForm<ISignInData>({
     resolver: yupResolver(schema),
   });
 

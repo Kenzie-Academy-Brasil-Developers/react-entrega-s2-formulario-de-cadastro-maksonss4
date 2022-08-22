@@ -1,6 +1,7 @@
 import { H2 } from "../../components/H2";
 import { Header } from "../../components/Header";
 import { Span } from "../../components/Span";
+import * as yup from "yup";
 import {
   ButtonAbsoluteConfirmPassword,
   ButtonAbsolutePassword,
@@ -16,11 +17,13 @@ import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useContext } from "react";
-import { RegistrationContext } from "../../Providers/RegistrationProvider";
+import {
+  IDataRegistration,
+  RegistrationContext,
+} from "../../Providers/RegistrationProvider";
 
 export function Registration() {
   const {
-    schema,
     onSubmit,
     seePassword,
     seeDoNotSeePassword,
@@ -28,11 +31,39 @@ export function Registration() {
     seeDoNotSeeConfirmPassword,
   } = useContext(RegistrationContext);
 
+  const schema = yup.object({
+    name: yup.string().required("Nome é obrigatório"),
+    email: yup
+      .string()
+      .email("Insira um email válido")
+      .required("Email é obrigatório"),
+    password: yup
+      .string()
+      .required()
+      .min(8, "Mínimo 8 caracteres")
+      .matches(/[A-Z]/, "deve conter ao menos 1 letra maiúscula")
+      .matches(/([a-z])/, "deve conter ao menos 1 letra minúscula")
+      .matches(/(\d)/, "deve conter ao menos 1 número")
+      .matches(/(\W)|_/, "deve conter ao menos 1 caracter especial"),
+    confirm_password: yup
+      .string()
+      .required("Confirme a senha")
+      .oneOf([yup.ref("password")], "Precisa ser igual a senha"),
+    bio: yup
+      .string()
+      .required("Este campo é obrigatório")
+      .min(8, "Mínimo 8 caracteres"),
+    contact: yup
+      .string()
+      .required("Este campo é obrigatório")
+      .min(5, "Mínimo 5 caracteres"),
+  });
+
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({ resolver: yupResolver(schema) });
+  } = useForm<IDataRegistration>({ resolver: yupResolver(schema) });
 
   return (
     <ContainerRegister>

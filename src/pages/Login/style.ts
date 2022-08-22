@@ -1,6 +1,7 @@
 import styled, { css } from "styled-components";
 import { Link } from "react-router-dom";
 import { FaEye } from "react-icons/fa";
+import { FieldError } from "react-hook-form";
 
 export const ContainerLogin = styled.div`
   display: flex;
@@ -51,7 +52,11 @@ export const Form = styled.form`
   }
 `;
 
-export const Input = styled.input`
+interface IInputProps {
+  erro: FieldError | undefined;
+}
+
+export const Input = styled.input<IInputProps>`
   border-radius: 5px;
   background-color: var(--gray-3);
   border-radius: 5px;
@@ -70,7 +75,11 @@ export const Input = styled.input`
         `}
 `;
 
-export const ButtonAbsolute = styled.button`
+interface IButtonAbsoluteProps {
+  see: boolean;
+}
+
+export const ButtonAbsolute = styled.button<IButtonAbsoluteProps>`
   position: absolute;
   background-color: transparent;
   border: 0;
@@ -89,7 +98,11 @@ export const ButtonAbsolute = styled.button`
 
 export const SvgEye = styled(FaEye)``;
 
-export const ButtonSubmit = styled.button`
+interface IButtonSubmit {
+  disabled: boolean;
+}
+
+export const ButtonSubmit = styled.button<IButtonSubmit>`
   color: var(--white);
   border-radius: 5px;
   border: 0;

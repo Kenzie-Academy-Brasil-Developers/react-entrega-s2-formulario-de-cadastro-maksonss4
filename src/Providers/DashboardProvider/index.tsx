@@ -1,38 +1,44 @@
 import { createContext, useState } from "react";
-import * as yup from "yup";
 import { api } from "../../services/api";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { IProvidersProps } from "..";
 
-export const DashboarContext = createContext();
+export const DashboarContext = createContext({} as IDashboardContext);
 
-export function DashboardProvider({ children }) {
+export interface IAddTech {
+  title: string;
+  status: string;
+}
+
+export interface IAtualizarTech {
+  status: string;
+}
+
+interface IDashboardContext {
+  selecionarIdTech: (value: string) => void;
+  selecionarTitleTech: (value: string) => void;
+  openCloseModalAddTech: () => void;
+  openCloseModalDeleteTech: () => void;
+  openCloseModalEditTech: () => void;
+  logout: () => void;
+  deleteTech: () => void;
+  addTechSubmit: (value: IAddTech) => void;
+  atualizarStatusTech: (value: IAtualizarTech) => void;
+  isOPenModalAddTech: boolean;
+  isOpenModalDeleteTech: boolean;
+  isOpenModalEditTech: boolean;
+  idTech: string;
+  titleTech: string;
+}
+
+export function DashboardProvider({ children }: IProvidersProps) {
   const [isOPenModalAddTech, setIsOpenModalAddTech] = useState(false);
   const [isOpenModalDeleteTech, setIsOpenModalDeleteTech] = useState(false);
   const [isOpenModalEditTech, setIsOpenModalEditTech] = useState(false);
   const [idTech, setIdTech] = useState("");
   const [titleTech, setTitleTech] = useState("");
   const navigate = useNavigate();
-
-  const schemaCadastro = yup.object({
-    title: yup.string().required("Campo obrigatório"),
-  });
-
-  const schemaEditar = yup.object({
-    status: yup.string().required("Campo obrigatório"),
-  });
-
-  function openCloseModalAddTech() {
-    setIsOpenModalAddTech(!isOPenModalAddTech);
-  }
-
-  function openCloseModalDeleteTech() {
-    setIsOpenModalDeleteTech(!isOpenModalDeleteTech);
-  }
-
-  function openCloseModalEditTech() {
-    setIsOpenModalEditTech(!isOpenModalEditTech);
-  }
 
   function tecAnteriormenteCadastrada() {
     toast.error("Tecnológia cadastrada anteriormente, você pode atualizá-la", {
@@ -82,30 +88,30 @@ export function DashboardProvider({ children }) {
     });
   }
 
-  function selecionarIdTech(id) {
+  function selecionarIdTech(id: string) {
     setIdTech(id);
   }
 
-  function selecionarTitleTech(title) {
+  function selecionarTitleTech(title: string) {
     setTitleTech(title);
+  }
+
+  function openCloseModalAddTech() {
+    setIsOpenModalAddTech(!isOPenModalAddTech);
+  }
+
+  function openCloseModalDeleteTech() {
+    setIsOpenModalDeleteTech(!isOpenModalDeleteTech);
+  }
+
+  function openCloseModalEditTech() {
+    setIsOpenModalEditTech(!isOpenModalEditTech);
   }
 
   function logout() {
     localStorage.removeItem("KHtokenKH");
     localStorage.removeItem("KHidKH");
-    setTimeout(() => {
-      navigate("/login", { replace: true });
-    }, 800);
-  }
-
-  function addTechSubmit(data) {
-    api
-      .post("/users/techs", data)
-      .then(() => {
-        tecCadastradaComSucesso();
-        openCloseModalAddTech(!isOPenModalAddTech);
-      })
-      .catch(() => tecAnteriormenteCadastrada());
+    navigate("/login", { replace: true });
   }
 
   function deleteTech() {
@@ -113,12 +119,23 @@ export function DashboardProvider({ children }) {
       .delete(`/users/techs/${idTech}`)
       .then(() => {
         tecDeletadaComSucesso();
-        openCloseModalDeleteTech(!isOpenModalDeleteTech);
+        openCloseModalDeleteTech();
       })
       .catch((err) => console.log(err));
   }
 
-  function atualizarStatusTech(data) {
+  function addTechSubmit(data: IAddTech) {
+    api
+      .post("/users/techs", data)
+      .then(() => {
+        tecCadastradaComSucesso();
+        openCloseModalAddTech();
+      })
+      .catch(() => tecAnteriormenteCadastrada());
+  }
+
+  function atualizarStatusTech(data: IAtualizarTech) {
+    console.log(data);
     api
       .put(`/users/techs/${idTech}`, data)
       .then(() => {
@@ -135,8 +152,6 @@ export function DashboardProvider({ children }) {
         addTechSubmit,
         isOPenModalAddTech,
         openCloseModalAddTech,
-        schemaCadastro,
-        schemaEditar,
         isOpenModalDeleteTech,
         openCloseModalDeleteTech,
         isOpenModalEditTech,

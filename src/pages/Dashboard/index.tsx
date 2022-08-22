@@ -18,7 +18,11 @@ import {
   Ul,
 } from "./style";
 import { Link, Navigate } from "react-router-dom";
-import { DashboarContext } from "../../Providers/DashboardProvider";
+import {
+  DashboarContext,
+  IAddTech,
+  IAtualizarTech,
+} from "../../Providers/DashboardProvider";
 import { Header } from "../../components/Header";
 import { Span } from "../../components/Span";
 import { Modal } from "../../components/Modal";
@@ -26,13 +30,12 @@ import { H2 } from "../../components/H2";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { LoginContext } from "../../Providers/LoginProvider";
+import * as yup from "yup";
 
 export function Dashboard() {
   const {
     logout,
     isOPenModalAddTech,
-    schemaCadastro,
-    schemaEditar,
     openCloseModalAddTech,
     addTechSubmit,
     isOpenModalDeleteTech,
@@ -46,12 +49,20 @@ export function Dashboard() {
     selecionarTitleTech,
   } = useContext(DashboarContext);
 
+  const schemaCadastro = yup.object({
+    title: yup.string().required("Campo obrigatório"),
+  });
+
+  const schemaEditar = yup.object({
+    status: yup.string().required("Campo obrigatório"),
+  });
+
   const { user, loading, tecs } = useContext(LoginContext);
   const {
     register: registerCadastro,
     handleSubmit: handleSubmitCadastro,
     formState: { errors: errorsCadastro },
-  } = useForm({
+  } = useForm<IAddTech>({
     resolver: yupResolver(schemaCadastro),
   });
 
@@ -59,13 +70,13 @@ export function Dashboard() {
     register: registerEditar,
     handleSubmit: handleSubmitEditar,
     formState: { errors: errorsEditar },
-  } = useForm({
+  } = useForm<IAtualizarTech>({
     resolver: yupResolver(schemaEditar),
   });
 
   if (loading) return <H2>Carregando...</H2>;
 
-  return user ? (
+  return Object.keys(user).length > 0 ? (
     <ContainerDashboard>
       <Header>
         <Link onClick={logout} to={"/login"}>
@@ -128,7 +139,7 @@ export function Dashboard() {
 
           <Form onSubmit={handleSubmitCadastro(addTechSubmit)}>
             <label htmlFor="title">
-              Nome{" "}
+              Nome
               {errorsCadastro.title && (
                 <Span>{errorsCadastro.title.message}</Span>
               )}

@@ -1,6 +1,7 @@
 import styled, { css } from "styled-components";
 import { BsPencil } from "react-icons/bs";
 import { BsTrash } from "react-icons/bs";
+import { FieldError } from "react-hook-form";
 
 export const ContainerDashboard = styled.div`
   display: flex;
@@ -93,7 +94,11 @@ export const Form = styled.form`
   }
 `;
 
-export const Input = styled.input`
+interface IInputProps {
+  erro: FieldError | undefined;
+}
+
+export const Input = styled.input<IInputProps>`
   border-radius: 5px;
   background-color: var(--gray-3);
   border-radius: 5px;
@@ -121,7 +126,11 @@ export const ButtonFecharModal = styled.button`
   color: var(--gray-4);
 `;
 
-export const ButtonSubmit = styled.button`
+interface IButtonSubmit {
+  disabled: boolean;
+}
+
+export const ButtonSubmit = styled.button<IButtonSubmit>`
   border-radius: 5px;
   border: 0;
   padding: 7px 0;

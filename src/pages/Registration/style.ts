@@ -1,5 +1,6 @@
 import styled, { css } from "styled-components";
 import { FaEye } from "react-icons/fa";
+import { FieldError } from "react-hook-form";
 
 export const ContainerRegister = styled.div`
   padding: 10px;
@@ -58,7 +59,11 @@ export const Form = styled.form`
   }
 `;
 
-export const Input = styled.input`
+interface IInputProps {
+  error: FieldError | undefined;
+}
+
+export const Input = styled.input<IInputProps>`
   border-radius: 5px;
   background-color: var(--gray-3);
   border-radius: 5px;
@@ -75,7 +80,11 @@ export const Input = styled.input`
     `}
 `;
 
-export const ButtonAbsolutePassword = styled.button`
+interface IButtonAbsolutePassword {
+  see: boolean;
+}
+
+export const ButtonAbsolutePassword = styled.button<IButtonAbsolutePassword>`
   position: absolute;
   right: 8px;
   top: 152px;
@@ -94,7 +103,11 @@ export const ButtonAbsolutePassword = styled.button`
 
 export const SvgEyePassword = styled(FaEye)``;
 
-export const ButtonAbsoluteConfirmPassword = styled.button`
+interface IButtonAbsoluteConfirmPassword {
+  see: boolean;
+}
+
+export const ButtonAbsoluteConfirmPassword = styled.button<IButtonAbsoluteConfirmPassword>`
   position: absolute;
   right: 8px;
   top: 217px;
@@ -113,7 +126,11 @@ export const ButtonAbsoluteConfirmPassword = styled.button`
 
 export const SvgEyeConfirmPassword = styled(FaEye)``;
 
-export const ButtonSubmit = styled.button`
+interface IButtonSubmit {
+  disabled: boolean;
+}
+
+export const ButtonSubmit = styled.button<IButtonSubmit>`
   border-radius: 5px;
   border: 0;
   padding: 7px 0;
